@@ -4,7 +4,6 @@
 
 * Remote code execution via the name of an uploaded file
 * Not all characters were allowed in the file name, e.g. no spaces and slashes. To replace spaces a bash specific variable was used. 
-* No back channel, so it was only possible to determine whether the command was executed successfully by looking at the status code. 
 * The file with the flag (flag.txt) was in the parent directory of the current working directory. 
 
 
@@ -72,7 +71,7 @@ Now that I knew I could run my on commands on the server, I first try to find ou
 * `xx;python#.mp4` - Status: 200, python is present, interesting
 * etc...
 
-At this point I had enough tools to start searching for the flag. I played a little with Python at first, but found that some characters such as `/` seemed to be forbidden by the shell. So there must be some kind of restricted shell. For me a payload containing Python code was a bit long and too cumbersome, so I decided to search the flag with Linux onboard tools.
+At this point I had enough tools to start searching for the flag. I played a little with Python at first, but found that some characters such as `/` seemed to be forbidden. So I did some googling and found out that file names with slashes are not allowed in UNIX systems.  For me a payload containing Python code was a bit long and too cumbersome, so I decided to search the flag with Linux onboard tools.
 
 I made the assumption that the flag must exist in a file, possibly called something like `flag.txt`. To see if this file was in the current directory, I had to run the following command: `ls flag.txt`. However, I had the problem that no spaces were allowed in the file by the web application. Fortunately, there are some workarounds in Linux, such as the following variable: `$IFS`. The IFS variable is an acronym for Internal Field Separator or Input Field Separator. The default value is `<space><tab><newline>`, but I only needed a space, so I used to following variant: `${IFS%??}`. I sent the following filename and got back a `500 internal server error` status code: 
 
@@ -80,7 +79,7 @@ I made the assumption that the flag must exist in a file, possibly called someth
 xx;ls${IFS%??}flag.txt;#.mp4
 ```
 
-Because of this status code I knew that this file is not present in the current working directory. Then, my approach was to use the binary `cd` to stepwise move up one directory from working directory towards the root directory and to check if the file exists there using the binary `ls`. The payload looked as follows: 
+Because of this status code I knew that this file is not present in the current working directory. Then, my approach was to use the binary `cd` to stepwise move up one directory from working directory towards the root directory and to check if the file exists using the binary `ls`. The payload looked as follows: 
 
 ```
 xx;${IFS%??}cd${IFS%??}..${IFS%??}&&${IFS%??}ls${IFS%??}flag.txt;#.mp4
