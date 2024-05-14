@@ -153,7 +153,7 @@ Submitting the given form with this payload will trigger the desired alert. Anot
 <title>POC</title>
 </head>
 <body>
-<form method="POST">
+<form action="https://challenge-0524.intigriti.io/challenge.php" method="POST">
 
 <div class="input-group mb-3">
     <span class="input-group-text" id="labelA">A</span>
@@ -174,7 +174,6 @@ Submitting the given form with this payload will trigger the desired alert. Anot
 </div>
 
 <div class="d-flex justify-content-between">
-    <a class="btn btn-light" href="/challenge.php?source=challenge.php" role="button">View Source</a>
     <button name="submit" type="submit" class="btn btn-primary">Calculate</button>
 </div>
 </form>
